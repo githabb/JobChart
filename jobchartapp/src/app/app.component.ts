@@ -3,6 +3,7 @@ import { HttpService } from './http.service';
 import { ChartModel } from './chart.model';
 import { LineModel } from './line.model';
 import { PieModel } from './pie.model';
+import { SplineModel } from './spline.model';
 import { Chart } from 'angular-highcharts';
 
 @Component({
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit {
 
   lineChart: Chart;
   pieChart: Chart;
+  splineChart: Chart;
 
   loading: boolean = false;
   loaded: boolean = false;
@@ -23,7 +25,8 @@ export class AppComponent implements OnInit {
   charts: ChartModel[] = [];
   lines: LineModel[] = [];
   pies: PieModel[] = [];
-     
+  splines: SplineModel[] = [];
+
   constructor(private httpService: HttpService){ 
   }
       
@@ -33,6 +36,7 @@ export class AppComponent implements OnInit {
     
     this.httpService.getLineData().subscribe(data => this.lines = <LineModel[]>data);
     this.httpService.getPieData().subscribe(data => this.pies = <PieModel[]>data);
+    this.httpService.getSplineData().subscribe(data => this.splines = <SplineModel[]>data);
 
     this.init();
   }
@@ -44,18 +48,38 @@ export class AppComponent implements OnInit {
       data: this.lines.map(o => o.value)
     });
 
-    let pieData = []
+    
+    let pieData = [];
     for(var i of this.pies) {
       pieData.push({name: i.month, y: i.percent});
+    }
+    
+    let splineXData = [];
+    let splineYData = [];
+    for(var n of this.splines) {
+      splineXData.push({y: n.x, name: n.letter});
+      splineYData.push({y: n.y, name: n.letter});
     }
 
     this.pieChart.addSerie({
       name: 'Months',
       data: pieData
     });
-    this.loading = false;
+
+    this.splineChart.addSerie({
+      name: 'X',
+      data: splineXData
+    });
+
+    this.splineChart.addSerie({
+      name: 'Y',
+      data: splineYData
+    });
+
     this.loaded = true;
+    this.loading = false;        
   }
+    
 
   isLoaded() : boolean {
     return this.loaded || this.loading;
@@ -65,6 +89,7 @@ export class AppComponent implements OnInit {
     
     this.lineChart = this.createChart('line');
     this.pieChart = this.createChart('pie');
+    this.splineChart = this.createSplineChart();
   }
 
   createChart(chartType): Chart {
@@ -80,6 +105,22 @@ export class AppComponent implements OnInit {
       },
       series: []
     });
+  }
+
+  createSplineChart(): Chart {
+    let result = this.createChart('spline');
+
+    result.options.yAxis = {
+      title: {
+          text: 'Price'
+      },
+      labels: {
+          formatter: function () {
+              return '$' + this.value;
+          }
+      }
+    };
+    return result;
   }
   
 }
