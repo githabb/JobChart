@@ -1,0 +1,18 @@
+<mat-card>
+  <mat-card-content>
+    <button mat-button [disabled]="isLoaded()" (click)="loadData()">Load Chart Data</button>
+        
+    <mat-tab-group class="demo-tab-group">
+      <mat-tab label="Charts">
+        <div class="demo-tab-content">
+          
+            <div [chart]="lineChart"></div>
+
+            <div [chart]="pieChart"></div>
+          
+        </div>
+      </mat-tab>
+      
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>
