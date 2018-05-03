@@ -1,4 +1,4 @@
-### h3 Инструкция 
+### Инструкция 
 
  1. Запустить скрипт CreateDatabase.sql 1
  2. Запустить скрипт InitialData.sql 2
@@ -14,7 +14,7 @@
  10. Открыть http://localhost:4200/ 10
  11. Нажать на кнопку Load Chart Data 11
 
-### h3Технологии
+### Технологии
 
 1. Вебсайт: TypeScript, Angular, Highcharts, Visual Studio Code 1
 2. Сервисы: C#, Entity Framework Core, .NET Core 2.0, Visual Studio 2017
