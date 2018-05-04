@@ -22,8 +22,8 @@ export class HttpService{
         return this.http.get('http://localhost:63342/api/spline')
     }
 
-    getPolarData(){
-        return this.http.get('http://localhost:63342/api/polar')
+    getAutoData(){
+        return this.http.get('http://localhost:63342/api/auto')
     }
 
     getData(chartType){
@@ -38,7 +38,7 @@ export class HttpService{
                 return this.getSplineData();
 
             case 'Polar':
-                return this.getPolarData();
+                return this.getAutoData();
 
             default:
                 return null;

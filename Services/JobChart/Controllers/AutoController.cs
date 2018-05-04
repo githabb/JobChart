@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace JobChart.Controllers
 {
     [Route("api/[controller]")]
-    public class PolarController : Controller
+    public class AutoController : Controller
     {
         private readonly IPolarService _service;
 
-        public PolarController(IPolarService service)
+        public AutoController(IPolarService service)
         {
             _service = service;
         }

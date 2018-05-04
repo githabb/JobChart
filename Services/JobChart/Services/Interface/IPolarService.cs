@@ -6,6 +6,6 @@ namespace JobChart.Services.Interface
 {
     public interface IPolarService
     {
-        Task<IList<PolarModel>> Get();
+        Task<IList<AutoModel>> Get();
     }
 }

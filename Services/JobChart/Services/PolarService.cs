@@ -14,20 +14,20 @@ namespace JobChart.Services
         {
         }
 
-        public async Task<IList<PolarModel>> Get()
+        public async Task<IList<AutoModel>> Get()
         {
             var query = Context.PolarChart;
             return await SelectQuery(query).ToListAsync();
         }
-        private IQueryable<PolarModel> SelectQuery(IQueryable<PolarChart> query)
+        private IQueryable<AutoModel> SelectQuery(IQueryable<PolarChart> query)
         {
-            return query.Select(m => new PolarModel()
+            return query.Select(m => new AutoModel()
             {
                 Id = m.Id,
                 Year = m.Year,
                 Car = m.Car,
                 Bus = m.Bus,
-                Tractors = m.Tractors
+                Tractor = m.Tractors
             });
         }
     }

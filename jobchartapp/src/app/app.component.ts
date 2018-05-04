@@ -4,7 +4,9 @@ import { ChartModel } from './chart.model';
 import { LineModel } from './line.model';
 import { PieModel } from './pie.model';
 import { SplineModel } from './spline.model';
+import { AutoModel } from './auto.model';
 import { Chart } from 'angular-highcharts';
+
 
 @Component({
   selector: 'app-root',
@@ -18,6 +20,7 @@ export class AppComponent implements OnInit {
   lineChart: Chart;
   pieChart: Chart;
   splineChart: Chart;
+  combineChart: Chart;
 
   loading: boolean = false;
   loaded: boolean = false;
@@ -26,41 +29,43 @@ export class AppComponent implements OnInit {
   lines: LineModel[] = [];
   pies: PieModel[] = [];
   splines: SplineModel[] = [];
+  autos: AutoModel[] = [];
 
-  constructor(private httpService: HttpService){ 
+  constructor(private httpService: HttpService){
   }
-      
-  ngOnInit(){   
-    
+
+  ngOnInit(){
+
     this.httpService.getChartList().subscribe(data => this.charts = <ChartModel[]>data);
-    
+
     this.httpService.getLineData().subscribe(data => this.lines = <LineModel[]>data);
     this.httpService.getPieData().subscribe(data => this.pies = <PieModel[]>data);
     this.httpService.getSplineData().subscribe(data => this.splines = <SplineModel[]>data);
+    this.httpService.getAutoData().subscribe(data => this.autos = <AutoModel[]>data);
 
     this.init();
   }
 
-  loadData() {    
+  loadData() {
     this.loading = true;
     this.lineChart.addSerie({
       name: 'Line',
       data: this.lines.map(o => o.value)
     });
 
-    
+
     let pieData = [];
     for(var i of this.pies) {
       pieData.push({name: i.month, y: i.percent});
     }
-    
+
     let splineXData = [];
     let splineYData = [];
     for(var n of this.splines) {
       splineXData.push({y: n.x, name: n.letter});
       splineYData.push({y: n.y, name: n.letter});
     }
-
+   
     this.pieChart.addSerie({
       name: 'Months',
       data: pieData
@@ -76,20 +81,51 @@ export class AppComponent implements OnInit {
       data: splineYData
     });
 
+    this.combineChart.addSerie({
+      type: 'column',
+      name: 'Cars',
+      data: this.autos.map(o => o.car)      
+     });
+
+     this.combineChart.addSerie({
+      type: 'column',
+      name: 'Buses',
+      data: this.autos.map(o => o.bus)      
+     });
+
+     this.combineChart.addSerie({
+      type: 'column',
+      name: 'Tractors',
+      data: this.autos.map(o => o.tractor)      
+     });
+     
+      this.combineChart.addSerie({
+      type: 'spline',
+      name: 'Sum',
+      data: this.autos.map(o => o.car+o.bus+o.tractor),
+      marker: {
+        lineWidth: 2,
+        lineColor: 'darkorange',
+        fillColor: 'white'
+      }     
+     });
+
     this.loaded = true;
-    this.loading = false;        
+    this.loading = false;
+
   }
-    
+
 
   isLoaded() : boolean {
     return this.loaded || this.loading;
   }
 
   init() {
-    
+
     this.lineChart = this.createChart('line');
     this.pieChart = this.createChart('pie');
     this.splineChart = this.createSplineChart();
+    this.combineChart = this.createCombineChart();
   }
 
   createChart(chartType): Chart {
@@ -107,6 +143,8 @@ export class AppComponent implements OnInit {
     });
   }
 
+
+
   createSplineChart(): Chart {
     let result = this.createChart('spline');
 
@@ -122,5 +160,16 @@ export class AppComponent implements OnInit {
     };
     return result;
   }
-  
+
+  createCombineChart(): Chart {
+    return new Chart({
+      title: {
+        text: 'Combination chart'
+      },
+      xAxis: {
+        categories: ['2007', '2008', '2010']
+    },
+       series: []
+    });
+   }
 }
